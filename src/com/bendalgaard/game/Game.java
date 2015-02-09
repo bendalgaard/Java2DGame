@@ -8,12 +8,12 @@ import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.io.IOException;
 
 import javax.swing.JFrame;
 
+import com.bendalgaard.game.gfx.BufferedImageLoader;
 import com.bendalgaard.game.gfx.SpriteSheet;
-
-
 
 public class Game extends Canvas implements Runnable {
 
@@ -30,7 +30,10 @@ public class Game extends Canvas implements Runnable {
 	private BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 	private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
 
-	private SpriteSheet spriteSheet = new SpriteSheet("/stick_animations_by_wargamer.png");
+	private BufferedImage spriteSheet = null;
+	//temp
+	private BufferedImage player = null;
+	
 	
 	public Game() {
 		setMinimumSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
@@ -57,9 +60,22 @@ public class Game extends Canvas implements Runnable {
 	public synchronized void stop() {
 		running = false;
 	}
+	
+	public void init() {
+		BufferedImageLoader loader = new BufferedImageLoader();
+		try {
+			spriteSheet = loader.loadImage("/stick_animations_by_wargamer.png");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		SpriteSheet ss = new SpriteSheet(spriteSheet);
+		player = ss.grabImage(1, 1, 70, 70);
+	}
 
 	@Override
 	public void run() {
+		init();
 		long last_time = System.nanoTime();
 		double ns_per_tick = 1000000000d/60d;
 		
@@ -105,10 +121,10 @@ public class Game extends Canvas implements Runnable {
 	public void tick() {
 		tick_count++;
 		
-		for (int i=0; i<pixels.length; i++) {
-			pixels[i] = i + tick_count;
-			//pixels[i] = i * tick_count;
-		}
+//		for (int i=0; i<pixels.length; i++) {
+//			pixels[i] = i + tick_count;
+//			//pixels[i] = i * tick_count;
+//		}
 		
 		
 	}
@@ -126,7 +142,7 @@ public class Game extends Canvas implements Runnable {
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, getWidth(), getHeight());
 		g.drawImage(image, 0, 0, getWidth(), getHeight(), null);
-		
+		g.drawImage(player, 100, 100, this);
 		
 		g.dispose();
 		bs.show();

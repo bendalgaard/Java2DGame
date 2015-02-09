@@ -1,44 +1,18 @@
 package com.bendalgaard.game.gfx;
 
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 public class SpriteSheet {
 
-	public String path;
-	public int width;
-	public int height;
-	public int[] pixels;
+	private BufferedImage image;
 	
-	public SpriteSheet(String path) {
-		BufferedImage image = null;
-		
-		try {
-			image = ImageIO.read(SpriteSheet.class.getResource(path));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		if (image == null) {
-			return;
-		}
-		
-		this.path = path;
-		this.width = image.getWidth();
-		this.height = image.getHeight();
-		
-		pixels = image.getRGB(0, 0, width, height, null, 0, width);
-		
-		for (int i=0; i<pixels.length; i++) {
-			//remove alpha channel and only uses 4 colors (255/4)
-			pixels[i] = (pixels[i] & 0xff)/64;
-		}
-		
-		for (int i=0; i<8; i++) {
-			System.out.println(pixels[8]);
-		}
+	public SpriteSheet(BufferedImage image) {
+		this.image = image;
+	}
+	
+	public BufferedImage grabImage (int col, int row, int width, int height) {
+		BufferedImage img = image.getSubimage((col * 70) - 70, (row * 70) - 70, width, height);
+		return img;
 	}
 	
 }
