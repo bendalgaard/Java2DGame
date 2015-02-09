@@ -28,11 +28,9 @@ public class Game extends Canvas implements Runnable {
 	
 	private JFrame frame;
 	private BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
-	private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
 
 	private BufferedImage spriteSheet = null;
-	//temp
-	private BufferedImage player = null;
+	private Player player = null;
 	
 	
 	public Game() {
@@ -70,7 +68,7 @@ public class Game extends Canvas implements Runnable {
 		}
 		
 		SpriteSheet ss = new SpriteSheet(spriteSheet);
-		player = ss.grabImage(1, 1, 70, 70);
+		player = new Player(200, 200, ss);
 	}
 
 	@Override
@@ -120,7 +118,7 @@ public class Game extends Canvas implements Runnable {
 
 	public void tick() {
 		tick_count++;
-		
+		player.tick();
 //		for (int i=0; i<pixels.length; i++) {
 //			pixels[i] = i + tick_count;
 //			//pixels[i] = i * tick_count;
@@ -142,7 +140,7 @@ public class Game extends Canvas implements Runnable {
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, getWidth(), getHeight());
 		g.drawImage(image, 0, 0, getWidth(), getHeight(), null);
-		g.drawImage(player, 100, 100, this);
+		player.render(g);
 		
 		g.dispose();
 		bs.show();
