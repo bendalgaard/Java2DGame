@@ -5,6 +5,7 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
@@ -68,6 +69,10 @@ public class Game extends Canvas implements Runnable {
 		}
 		
 		SpriteSheet ss = new SpriteSheet(spriteSheet);
+		
+		addKeyListener(new KeyInput(this));
+		this.requestFocus();
+		
 		player = new Player(200, 200, ss);
 	}
 
@@ -137,7 +142,7 @@ public class Game extends Canvas implements Runnable {
 		
 		Graphics g = bs.getDrawGraphics();
 		
-		g.setColor(Color.BLACK);
+		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, getWidth(), getHeight());
 		g.drawImage(image, 0, 0, getWidth(), getHeight(), null);
 		player.render(g);
@@ -145,6 +150,56 @@ public class Game extends Canvas implements Runnable {
 		g.dispose();
 		bs.show();
 		
+	}
+	
+	public void keyPressed(KeyEvent e) {
+		int key = e.getKeyCode();
+
+		// WASD
+		if (key == KeyEvent.VK_D) {
+			player.setVelX(5);
+		} else if (key == KeyEvent.VK_A) {
+			player.setVelX(-5);
+		} else if (key == KeyEvent.VK_W) {
+			player.setVelY(-5);
+		} else if (key == KeyEvent.VK_S) {
+			player.setVelY(5);
+		}
+		// Arrows
+		if (key == KeyEvent.VK_RIGHT) {
+			player.setVelX(5);
+		} else if (key == KeyEvent.VK_LEFT) {
+			player.setVelX(-5);
+		} else if (key == KeyEvent.VK_UP) {
+			player.setVelY(-5);
+		} else if (key == KeyEvent.VK_DOWN) {
+			player.setVelY(5);
+		}
+	}
+	
+	public void keyReleased(KeyEvent e) {
+		int key = e.getKeyCode();
+		
+		// WASD
+		if (key == KeyEvent.VK_D) {
+			player.setVelX(0);
+		} else if (key == KeyEvent.VK_A) {
+			player.setVelX(0);
+		} else if (key == KeyEvent.VK_W) {
+			player.setVelY(0);
+		} else if (key == KeyEvent.VK_S) {
+			player.setVelY(0);
+		}
+		// Arrows
+		if (key == KeyEvent.VK_RIGHT) {
+			player.setVelX(0);
+		} else if (key == KeyEvent.VK_LEFT) {
+			player.setVelX(0);
+		} else if (key == KeyEvent.VK_UP) {
+			player.setVelY(0);
+		} else if (key == KeyEvent.VK_DOWN) {
+			player.setVelY(0);
+		}
 	}
 
 	public static void main(String[] args) {
